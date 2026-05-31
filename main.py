@@ -93,7 +93,15 @@ def main():
         # --- pass 1: update boids, compute colors, stamp trail dots ---
         boid_colors = []
         for boid in boids:
-            boid.update()
+            boid.update(
+                boids,
+                ui.sep_perception.value,
+                ui.ali_perception.value,
+                ui.coh_perception.value,
+                ui.sep_strength.value,
+                ui.ali_strength.value,
+                ui.coh_strength.value
+            )
             boid.edges(WIDTH, HEIGHT)
             color = boid.get_color(ui.color_mode.selected, boids, color_settings)
             boid_colors.append(color)

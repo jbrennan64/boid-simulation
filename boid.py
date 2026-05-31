@@ -84,13 +84,74 @@ class Boid:
             vector = vector.normalize() * max_val
         return vector
 
-    def update(self):
+    def update(self, boids, sep_perception, ali_perception, coh_perception, sep_str, ali_str, coh_str):
+        self.acceleration += self.separation(boids, sep_perception) * sep_str
+        self.acceleration += self.alignment(boids, ali_perception) * ali_str
+        self.acceleration += self.cohesion(boids, coh_perception) * coh_str
         self.velocity += self.acceleration
         self.velocity = self.clamp_speed(self.velocity, self.max_speed)
         if self.velocity.length() < self.min_speed:
             self.velocity = self.velocity.normalize() * self.min_speed
         self.position += self.velocity
         self.acceleration *= 0
+
+    def separation(self, boids, perception):
+        steering = pygame.Vector2(0, 0)
+        total = 0
+
+        for other in boids:
+            distance = self.position.distance_to(other.position)
+            if other is not self and distance < perception:
+                diff = self.position - other.position
+                diff /= distance
+                steering += diff
+                total += 1
+
+        if total > 0:
+            steering /= total
+            steering = self.clamp_speed(steering, self.max_speed)
+            steering -= self.velocity
+            steering = self.clamp_speed(steering, self.max_force)
+
+
+        return steering
+
+    def alignment(self, boids, perception):
+        steering = pygame.Vector2(0, 0)
+        total = 0 
+
+        for other in boids:
+            distance = self.position.distance_to(other.position)
+            if other is not self and distance < perception:
+                steering += other.velocity
+                total += 1
+
+        if total > 0:
+            steering /= total
+            steering = self.clamp_speed(steering, self.max_speed)
+            steering -= self.velocity
+            steering = self.clamp_speed(steering, self.max_force)
+
+        return steering       
+
+    def cohesion(self, boids, perception):
+        steering = pygame.Vector2(0, 0)
+        total = 0
+
+        for other in boids:
+            distance = self.position.distance_to(other.position)
+            if other is not self and distance < perception:
+                steering += other.position
+                total += 1
+
+        if total > 0:
+            steering /= total
+            steering -= self.position
+            steering = self.clamp_speed(steering, self.max_speed)
+            steering -= self.velocity
+            steering = self.clamp_speed(steering, self.max_force)
+
+        return steering     
 
     def edges(self, width, height):
         if self.position.x > width:

@@ -358,7 +358,9 @@ class UI:
         self.sep_strength = Slider("Separation", 1.0, 0.0, 3.0, 0.1)
         self.ali_strength = Slider("Alignment",  1.0, 0.0, 3.0, 0.1)
         self.coh_strength = Slider("Cohesion",   1.0, 0.0, 3.0, 0.1)
-        self.perception   = Slider("Perception", 60,  10,  200, 1)
+        self.sep_perception  = Slider("Sep radius", 25, 5, 100, 1)
+        self.ali_perception  = Slider("Ali radius", 60, 10, 200, 1)
+        self.coh_perception  = Slider("Coh radius", 100, 10, 200, 1)
 
         # --- Visual tab: color mode ---
         self.color_mode = Selector("Color mode", ["Solid", "Rainbow", "Velocity", "Density"])
@@ -402,7 +404,8 @@ class UI:
 
         self.sim_sections = [
             Section("Boids",    [self.boid_count, self.speed, self.boid_size, self.shape, self.mode_3d]),
-            Section("Behavior", [self.sep_strength, self.ali_strength, self.coh_strength, self.perception]),
+            Section("Behavior", [self.sep_strength, self.ali_strength, self.coh_strength, 
+                                  self.sep_perception, self.ali_perception, self.coh_perception]),
         ]
         self.vis_sections = [
             Section("Color", [

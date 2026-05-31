@@ -23,6 +23,7 @@ class Boid:
         self.hue_offset = random.uniform(0, 1.0)
         self._density_tick = 0
         self.density_t = 0.0
+        self.draw_angle = 0.0
 
         if species == "prey":
             self.max_speed = PREY_MAX_SPEED
@@ -165,7 +166,10 @@ class Boid:
 
     def draw(self, screen, shape=0, color=None):
         draw_color = color if color else self.color
-        angle = math.atan2(self.velocity.y, self.velocity.x)
+        target_angle = math.atan2(self.velocity.y, self.velocity.x)
+        diff = (target_angle - self.draw_angle + math.pi) % (2 * math.pi) - math.pi
+        self.draw_angle += diff * 0.3
+        angle = self.draw_angle
 
         if shape == 1:
             pygame.draw.circle(screen, draw_color, (int(self.position.x), int(self.position.y)), self.size)

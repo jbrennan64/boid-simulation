@@ -51,9 +51,9 @@ def main():
         # sync boid properties from UI
         for boid in boids:
             boid.size      = ui.boid_size.value
-            boid.max_speed = ui.speed.value
-            boid.min_speed = ui.speed.value * ui.min_speed_mult.value
             boid.max_force = ui.max_force.value
+            boid.min_speed = BASE_SPEED * ui.min_speed_mult.value
+            boid.max_speed = BASE_SPEED
 
         while len(boids) < int(ui.boid_count.value):
             boids.append(Boid(random.randint(0, WIDTH), random.randint(0, HEIGHT)))
@@ -91,19 +91,24 @@ def main():
             'density_radius':       ui.density_radius.value,
         }
 
-        # --- pass 1: update boids, compute colors, stamp trail dots ---
+        # --- pass 1: update boids (fast-forward steps) ---
+        steps = max(1, int(ui.speed.value))
+        for _ in range(steps):
+            for boid in boids:
+                boid.update(
+                    boids,
+                    ui.sep_perception.value,
+                    ui.ali_perception.value,
+                    ui.coh_perception.value,
+                    ui.sep_strength.value,
+                    ui.ali_strength.value,
+                    ui.coh_strength.value
+                )
+                boid.edges(WIDTH, HEIGHT)
+
+        # --- compute colors and stamp trail dots ---
         boid_colors = []
         for boid in boids:
-            boid.update(
-                boids,
-                ui.sep_perception.value,
-                ui.ali_perception.value,
-                ui.coh_perception.value,
-                ui.sep_strength.value,
-                ui.ali_strength.value,
-                ui.coh_strength.value
-            )
-            boid.edges(WIDTH, HEIGHT)
             color = boid.get_color(ui.color_mode.selected, boids, color_settings)
             boid_colors.append(color)
             if ui.trails_on.value:

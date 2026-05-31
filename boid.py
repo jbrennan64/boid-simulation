@@ -101,9 +101,9 @@ class Boid:
 
         for other in boids:
             distance = self.position.distance_to(other.position)
-            if other is not self and distance < perception:
+            if other is not self and 0 < distance < perception:
                 diff = self.position - other.position
-                diff /= distance
+                diff /= (distance * distance)
                 steering += diff
                 total += 1
 

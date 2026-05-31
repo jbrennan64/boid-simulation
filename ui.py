@@ -355,12 +355,14 @@ class UI:
         self.shape      = Selector("Shape", ["Triangle", "Dot", "Arrow"])
         self.mode_3d    = Toggle("3D mode (soon)", False)
 
-        self.sep_strength = Slider("Separation", 1.0, 0.0, 3.0, 0.1)
-        self.ali_strength = Slider("Alignment",  1.0, 0.0, 3.0, 0.1)
-        self.coh_strength = Slider("Cohesion",   1.0, 0.0, 3.0, 0.1)
-        self.sep_perception  = Slider("Sep radius", 25, 5, 100, 1)
-        self.ali_perception  = Slider("Ali radius", 60, 10, 200, 1)
-        self.coh_perception  = Slider("Coh radius", 100, 10, 200, 1)
+        self.sep_strength    = Slider("Separation", DEFAULT_SEP_STRENGTH, 0.0, 5.0,  0.1)
+        self.ali_strength    = Slider("Alignment",  DEFAULT_ALI_STRENGTH, 0.0, 5.0,  0.1)
+        self.coh_strength    = Slider("Cohesion",   DEFAULT_COH_STRENGTH, 0.0, 5.0,  0.1)
+        self.sep_perception  = Slider("Sep radius", DEFAULT_SEP_RADIUS,   5,   100,  1)
+        self.ali_perception  = Slider("Ali radius", DEFAULT_ALI_RADIUS,   10,  200,  1)
+        self.coh_perception  = Slider("Coh radius", DEFAULT_COH_RADIUS,   10,  300,  1)
+        self.max_force       = Slider("Max force",  DEFAULT_MAX_FORCE,    0.05, 0.5, 0.01)
+        self.min_speed_mult  = Slider("Min speed",  DEFAULT_MIN_SPEED_MULT, 0.0, 0.9, 0.05)
 
         # --- Visual tab: color mode ---
         self.color_mode = Selector("Color mode", ["Solid", "Rainbow", "Velocity", "Density"])
@@ -404,8 +406,12 @@ class UI:
 
         self.sim_sections = [
             Section("Boids",    [self.boid_count, self.speed, self.boid_size, self.shape, self.mode_3d]),
-            Section("Behavior", [self.sep_strength, self.ali_strength, self.coh_strength, 
-                                  self.sep_perception, self.ali_perception, self.coh_perception]),
+            Section("Behavior", [
+                self.sep_strength, self.sep_perception,
+                self.ali_strength, self.ali_perception,
+                self.coh_strength, self.coh_perception,
+                self.max_force, self.min_speed_mult,
+            ]),
         ]
         self.vis_sections = [
             Section("Color", [

@@ -52,7 +52,8 @@ def main():
         for boid in boids:
             boid.size      = ui.boid_size.value
             boid.max_speed = ui.speed.value
-            boid.min_speed = ui.speed.value * 0.6
+            boid.min_speed = ui.speed.value * ui.min_speed_mult.value
+            boid.max_force = ui.max_force.value
 
         while len(boids) < int(ui.boid_count.value):
             boids.append(Boid(random.randint(0, WIDTH), random.randint(0, HEIGHT)))

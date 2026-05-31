@@ -103,7 +103,7 @@ class Boid:
             distance = self.position.distance_to(other.position)
             if other is not self and 0 < distance < perception:
                 diff = self.position - other.position
-                diff /= (distance * distance)
+                diff /= distance
                 steering += diff
                 total += 1
 
